@@ -2,6 +2,7 @@ import moment from 'moment'
 import React from 'react'
 import { Controlled as CodeMirror } from 'react-codemirror2'
 import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
 import { updateNote } from '@/slices/note'
 import { togglePreviewMarkdown } from '@/slices/settings'
@@ -9,12 +10,12 @@ import { NoteItem } from '@/types'
 import { EmptyEditor } from '@/components/Editor/EmptyEditor'
 import { PreviewEditor } from '@/components/Editor/PreviewEditor'
 import { getSettings, getNotes } from '@/selectors'
+import { setPendingSync } from '@/slices/sync'
 
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/base16-light.css'
 import 'codemirror/mode/gfm/gfm'
 import 'codemirror/addon/selection/active-line'
-import { setPendingSync } from '@/slices/sync'
 
 export const NoteEditor: React.FC = () => {
   const { activeNoteId, loading, notes } = useSelector(getNotes)
@@ -65,8 +66,20 @@ export const NoteEditor: React.FC = () => {
               }
             }}
           />
-          <button className="preview-button" onClick={_togglePreviewMarkdown}>
+          {/* <button className="preview-button" onClick={_togglePreviewMarkdown}>
             Preview
+          </button> */}
+          <button
+            className="preview-button"
+            onClick={async () => {
+              try {
+                await axios.post('/api/notes/initialize')
+              } catch (error) {
+                //console.log(error)
+              }
+            }}
+          >
+            Initialize Repo
           </button>
         </>
       )

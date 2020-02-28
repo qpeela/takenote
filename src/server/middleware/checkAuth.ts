@@ -8,7 +8,7 @@ const checkAuth = async (request: Request, response: Response, next: NextFunctio
 
     next()
   } else {
-    response.status(403).send({ message: 'Forbidden Resource', status: 403 })
+    response.status(304).send({ message: 'Nothing to modify', status: 304 })
   }
 }
 
